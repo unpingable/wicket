@@ -1,0 +1,56 @@
+{
+  "name": "authorize_execute_are_not_total_order",
+  "documentation_only": true,
+  "doctrine": [
+    "v1_standing_ladder_flat_does_not_capture_adjacent_powers"
+  ],
+  "note": "An actor may be permitted to authorize an action without being permitted to execute it, or permitted to execute a bounded action without authority to authorize others. Wicket v1 (§5.1) flattens these into a strict total order observe < interpret < recommend < authorize < execute and emits STANDING_LADDER_V1_FLAT on every authorize/execute/bind verdict to make the debt visible. Real-world example: an SRE may have execute standing on `kubectl apply` but no authorize standing to grant others that capability; an approver may have authorize standing for a deploy without execute standing on the deploy itself. The v1 ladder forces both of these into the same comparison, which gives the wrong sign in some cases. Resolution is deferred to a partial-order standing model in v2 (§13.7). Not executed by CI; documents the boundary so consumers know to read STANDING_LADDER_V1_FLAT as 'this verdict may misclassify if authorize/execute disagree on this actor.'",
+  "intent": {
+    "actor": "approver-bot",
+    "actor_standing": { "class": "authorize", "provenance": "caller_asserted" },
+    "intended_action": "deploy.production",
+    "operation_class": "execute",
+    "target": "service/production",
+    "scope_assertion": {
+      "scope_includes_target": true,
+      "provenance": "caller_asserted",
+      "evidence_refs": ["policy://repo/CLAUDE.md#deploy-scope"]
+    },
+    "claimed_basis": {
+      "rule": "approver-bot has authorize standing for deploy approvals; here it tries to execute itself",
+      "evidence_refs": [
+        {
+          "ref": "policy://repo/SPEC.md#deploy-policy",
+          "kind": "policy_ref",
+          "issuer": "repo-owner",
+          "subject": "approver-bot",
+          "valid_from": "2026-05-09T00:00:00Z",
+          "valid_until": "2026-05-10T00:00:00Z",
+          "status": "valid"
+        },
+        {
+          "ref": "tool://kubectl/rollout-status",
+          "kind": "tool_trace",
+          "issuer": "ops-tool",
+          "subject": "approver-bot",
+          "valid_from": "2026-05-09T11:30:00Z",
+          "valid_until": "2026-05-09T13:00:00Z",
+          "status": "valid"
+        }
+      ]
+    },
+    "precedence": {
+      "resolution": "active",
+      "provenance": "caller_asserted",
+      "evidence_refs": []
+    },
+    "revocation": {
+      "basis_revoked": false,
+      "standing_forbidden": false,
+      "provenance": "caller_asserted",
+      "evidence_refs": []
+    },
+    "expected_effect": "deploy production",
+    "call_timestamp": "2026-05-09T12:00:00Z"
+  }
+}

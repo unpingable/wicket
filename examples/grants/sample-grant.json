@@ -1,0 +1,11 @@
+{
+  "schema": "wicket-grant/v1",
+  "actor": "claude-code",
+  "standing": "execute",
+  "scope_root": "/home/jbeck/git/wicket",
+  "operations": ["edit", "run", "commit"],
+  "issued_by": "jmbeck",
+  "issued_at": "2026-05-09T10:00:00Z",
+  "expires_at": "2030-05-09T18:00:00Z",
+  "basis": "interactive coding session approval (dogfood fixture)"
+}

@@ -1,0 +1,27 @@
+[package]
+name = "wicket"
+version = "0.1.0"
+edition = "2021"
+description = "Admissibility preflight for agentic operations"
+license = "Apache-2.0"
+
+[lib]
+name = "wicket"
+path = "src/lib.rs"
+
+[[bin]]
+name = "wicket"
+path = "src/main.rs"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_jcs = "0.1"
+sha2 = "0.10"
+clap = { version = "4", features = ["derive"] }
+chrono = { version = "0.4", default-features = false, features = ["serde", "clock"] }
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+strip = true

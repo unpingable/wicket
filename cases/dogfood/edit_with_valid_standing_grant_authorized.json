@@ -1,0 +1,103 @@
+{
+  "name": "dogfood_edit_with_valid_standing_grant_authorized",
+  "doctrine": [
+    "standing_grant_validation_elevates_standing_when_valid",
+    "wrapper_attaches_grant_as_policy_ref_evidence_for_audit_trail"
+  ],
+  "note": "Captured from `wicket edit SPEC.md --standing-grant examples/grants/sample-grant.json`. The wrapper validated the grant (in-scope, in-window, actor matches, edit verb permitted), elevated standing to execute, and attached the grant as policy_ref evidence. The receipt records the grant in evidence_ref_hashes so a downstream auditor can trace which grant authorized the action.",
+  "intent": {
+    "actor": "claude-code",
+    "actor_standing": {
+      "class": "execute",
+      "provenance": "caller_asserted"
+    },
+    "intended_action": "fs.edit",
+    "operation_class": "execute",
+    "target": "SPEC.md",
+    "scope_assertion": {
+      "scope_includes_target": true,
+      "provenance": "caller_asserted",
+      "evidence_refs": [
+        "policy:///home/jbeck/git/wicket/SPEC.md",
+        "policy:///home/jbeck/git/wicket/README.md"
+      ]
+    },
+    "claimed_basis": {
+      "rule": "test grant flow",
+      "evidence_refs": [
+        {
+          "ref": "policy:///home/jbeck/git/wicket/SPEC.md",
+          "kind": "policy_ref",
+          "issuer": "repo-owner",
+          "subject": "claude-code",
+          "valid_from": "2026-05-10T09:31:48Z",
+          "valid_until": "2026-05-10T11:31:48Z",
+          "status": "valid"
+        },
+        {
+          "ref": "policy:///home/jbeck/git/wicket/README.md",
+          "kind": "policy_ref",
+          "issuer": "repo-owner",
+          "subject": "claude-code",
+          "valid_from": "2026-05-10T09:31:48Z",
+          "valid_until": "2026-05-10T11:31:48Z",
+          "status": "valid"
+        },
+        {
+          "ref": "file://SPEC.md#sha256:54c38474fd4b080e3632bc1b9e79451f754ef7168a835beea13675519c5f84f7",
+          "kind": "file_hash",
+          "issuer": "filesystem",
+          "subject": "claude-code",
+          "valid_from": "2026-05-10T10:31:48Z",
+          "valid_until": "2026-05-10T11:31:48Z",
+          "status": "valid"
+        },
+        {
+          "ref": "wicket-grant://examples/grants/sample-grant.json#sha256:7b98f26407f39bda40c30f736816567df187cf16fe88177857f1070d29cab55f",
+          "kind": "policy_ref",
+          "issuer": "jmbeck",
+          "subject": "claude-code",
+          "valid_from": "2026-05-09T10:00:00Z",
+          "valid_until": "2030-05-09T18:00:00Z",
+          "status": "valid"
+        }
+      ]
+    },
+    "precedence": {
+      "resolution": "active",
+      "provenance": "caller_asserted",
+      "evidence_refs": []
+    },
+    "revocation": {
+      "basis_revoked": false,
+      "standing_forbidden": false,
+      "provenance": "caller_asserted",
+      "evidence_refs": []
+    },
+    "expected_effect": "modify SPEC.md",
+    "call_timestamp": "2026-05-10T10:31:48Z"
+  },
+  "expected": {
+    "surface_verdict": "authorized",
+    "dimensions": {
+      "basis": {
+        "status": "satisfied"
+      },
+      "precedence": {
+        "status": "satisfied"
+      },
+      "standing": {
+        "status": "satisfied"
+      }
+    },
+    "must_include_reason_codes": [
+      "BASIS_OK",
+      "PRECEDENCE_OK",
+      "STANDING_OK"
+    ],
+    "must_forbid": [],
+    "must_allow": [
+      "execute_intended_action"
+    ]
+  }
+}

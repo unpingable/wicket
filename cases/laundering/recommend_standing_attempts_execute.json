@@ -1,0 +1,69 @@
+{
+  "name": "recommend_standing_attempts_execute",
+  "doctrine": [
+    "recommendation_does_not_authorize_execution",
+    "downgrade_lives_in_allowed_not_in_surface_verdict"
+  ],
+  "intent": {
+    "actor": "claude-code",
+    "actor_standing": { "class": "recommend", "provenance": "caller_asserted" },
+    "intended_action": "fs.write",
+    "operation_class": "execute",
+    "target": "src/lib.rs",
+    "scope_assertion": {
+      "scope_includes_target": true,
+      "provenance": "caller_asserted",
+      "evidence_refs": ["policy://repo/CLAUDE.md#write-scope"]
+    },
+    "claimed_basis": {
+      "rule": "policy permits edit; tool trace attached",
+      "evidence_refs": [
+        {
+          "ref": "policy://repo/SPEC.md#edit-policy",
+          "kind": "policy_ref",
+          "issuer": "repo-owner",
+          "subject": "claude-code",
+          "valid_from": "2026-05-09T00:00:00Z",
+          "valid_until": "2026-05-10T00:00:00Z",
+          "status": "valid"
+        },
+        {
+          "ref": "tool://git/status",
+          "kind": "tool_trace",
+          "issuer": "ops-tool",
+          "subject": "claude-code",
+          "valid_from": "2026-05-09T11:30:00Z",
+          "valid_until": "2026-05-09T13:00:00Z",
+          "status": "valid"
+        }
+      ]
+    },
+    "precedence": {
+      "resolution": "active",
+      "provenance": "caller_asserted",
+      "evidence_refs": []
+    },
+    "revocation": {
+      "basis_revoked": false,
+      "standing_forbidden": false,
+      "provenance": "caller_asserted",
+      "evidence_refs": []
+    },
+    "expected_effect": "modify file at target",
+    "call_timestamp": "2026-05-09T12:00:00Z"
+  },
+  "expected": {
+    "surface_verdict": "denied",
+    "dimensions": {
+      "basis": { "status": "satisfied" },
+      "precedence": { "status": "satisfied" },
+      "standing": { "status": "insufficient" }
+    },
+    "must_include_reason_codes": [
+      "STANDING_INSUFFICIENT_FOR_OPERATION",
+      "STANDING_LADDER_V1_FLAT"
+    ],
+    "must_forbid": ["mutate_target", "claim_authorization"],
+    "must_allow": ["propose_recommendation"]
+  }
+}

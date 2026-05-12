@@ -1,0 +1,58 @@
+{
+  "name": "future_provenance_attested",
+  "doctrine": [
+    "future_provenance_is_unaccounted_in_v1_not_schema_invalid"
+  ],
+  "intent": {
+    "actor": "claude-code",
+    "actor_standing": { "class": "execute", "provenance": "attested" },
+    "intended_action": "fs.write",
+    "operation_class": "execute",
+    "target": "src/lib.rs",
+    "scope_assertion": {
+      "scope_includes_target": true,
+      "provenance": "caller_asserted",
+      "evidence_refs": []
+    },
+    "claimed_basis": {
+      "rule": "policy permits write",
+      "evidence_refs": [
+        {
+          "ref": "policy://repo/SPEC.md#write",
+          "kind": "policy_ref",
+          "issuer": "repo-owner",
+          "subject": "claude-code",
+          "valid_from": "2026-05-09T00:00:00Z",
+          "valid_until": "2026-05-10T00:00:00Z",
+          "status": "valid"
+        }
+      ]
+    },
+    "precedence": {
+      "resolution": "active",
+      "provenance": "caller_asserted",
+      "evidence_refs": []
+    },
+    "revocation": {
+      "basis_revoked": false,
+      "standing_forbidden": false,
+      "provenance": "caller_asserted",
+      "evidence_refs": []
+    },
+    "expected_effect": "modify file",
+    "call_timestamp": "2026-05-09T12:00:00Z"
+  },
+  "expected": {
+    "surface_verdict": "unaccounted",
+    "dimensions": {
+      "basis": { "status": "ambiguous" },
+      "precedence": { "status": "ambiguous" },
+      "standing": { "status": "insufficient" }
+    },
+    "must_include_reason_codes": [
+      "INPUT_FUTURE_PROVENANCE_RESERVED",
+      "UNACCOUNTED_INPUT"
+    ],
+    "must_forbid": ["proceed_with_unaccounted_intent"]
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "name": "closed_world_violation",
+  "documentation_only": true,
+  "doctrine": [
+    "evidence_provenance_outside_declared_world_undetectable_in_v1"
+  ],
+  "note": "Caller cites evidence from a source outside the declared closed world (e.g. a third-party oracle the project does not trust). V1 supports only caller_asserted provenance and does not verify provenance, so Wicket cannot detect this. The fixture documents the boundary; a future verified-provenance path closes it.",
+  "intent": {
+    "actor": "claude-code",
+    "actor_standing": { "class": "execute", "provenance": "caller_asserted" },
+    "intended_action": "deploy.production",
+    "operation_class": "execute",
+    "target": "service/production",
+    "scope_assertion": {
+      "scope_includes_target": true,
+      "provenance": "caller_asserted",
+      "evidence_refs": ["policy://repo/CLAUDE.md#deploy-scope"]
+    },
+    "claimed_basis": {
+      "rule": "external dashboard says deploy is fine",
+      "evidence_refs": [
+        {
+          "ref": "https://untrusted.example.com/dashboard",
+          "kind": "tool_output",
+          "issuer": "untrusted-third-party",
+          "subject": "claude-code",
+          "valid_from": "2026-05-09T11:00:00Z",
+          "valid_until": "2026-05-09T13:00:00Z",
+          "status": "valid"
+        },
+        {
+          "ref": "tool://kubectl/status",
+          "kind": "tool_trace",
+          "issuer": "ops-tool",
+          "subject": "claude-code",
+          "valid_from": "2026-05-09T11:30:00Z",
+          "valid_until": "2026-05-09T13:00:00Z",
+          "status": "valid"
+        }
+      ]
+    },
+    "precedence": {
+      "resolution": "active",
+      "provenance": "caller_asserted",
+      "evidence_refs": []
+    },
+    "revocation": {
+      "basis_revoked": false,
+      "standing_forbidden": false,
+      "provenance": "caller_asserted",
+      "evidence_refs": []
+    },
+    "expected_effect": "deploy to production",
+    "call_timestamp": "2026-05-09T12:00:00Z"
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wicket.dev/schemas/verdict.schema.json",
+  "title": "Wicket Outcome",
+  "description": "Single-call admissibility preflight output. SPEC.md §8.",
+  "type": "object",
+  "required": [
+    "class",
+    "surface_verdict",
+    "operation_class",
+    "dimensions",
+    "reason_codes",
+    "allowed",
+    "forbidden",
+    "receipt"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "class": { "enum": ["verdict", "error"] },
+    "surface_verdict": { "$ref": "#/$defs/SurfaceVerdict" },
+    "operation_class": {
+      "enum": ["observe", "interpret", "recommend", "authorize", "execute", "bind"]
+    },
+    "dimensions": {
+      "type": "object",
+      "required": ["basis", "precedence", "standing"],
+      "additionalProperties": false,
+      "properties": {
+        "basis": {
+          "type": "object",
+          "required": ["status", "reason_codes"],
+          "additionalProperties": false,
+          "properties": {
+            "status": { "$ref": "#/$defs/BasisStatus" },
+            "reason_codes": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "precedence": {
+          "type": "object",
+          "required": ["status", "reason_codes"],
+          "additionalProperties": false,
+          "properties": {
+            "status": { "$ref": "#/$defs/PrecedenceStatus" },
+            "reason_codes": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "standing": {
+          "type": "object",
+          "required": ["status", "reason_codes"],
+          "additionalProperties": false,
+          "properties": {
+            "status": { "$ref": "#/$defs/StandingStatus" },
+            "reason_codes": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "reason_codes": { "type": "array", "items": { "type": "string" } },
+    "allowed": { "type": "array", "items": { "type": "string" } },
+    "forbidden": { "type": "array", "items": { "type": "string" } },
+    "receipt": {
+      "type": "object",
+      "required": [
+        "receipt_id",
+        "obligation",
+        "input_hash",
+        "evidence_ref_hashes",
+        "timestamp"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "receipt_id": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "obligation": {
+          "enum": [
+            "action_receipt",
+            "advisory_receipt",
+            "refusal_receipt",
+            "gap_receipt",
+            "error_receipt"
+          ]
+        },
+        "input_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+        "evidence_ref_hashes": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+        },
+        "prev_receipt_hash": {
+          "type": ["string", "null"],
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "timestamp": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "$defs": {
+    "SurfaceVerdict": {
+      "enum": ["authorized", "advisory_only", "denied", "gap", "unaccounted"]
+    },
+    "BasisStatus": {
+      "enum": [
+        "satisfied",
+        "insufficient",
+        "stale",
+        "absent",
+        "ambiguous",
+        "inadmissible",
+        "revoked"
+      ]
+    },
+    "PrecedenceStatus": {
+      "enum": ["satisfied", "superseded", "ambiguous"]
+    },
+    "StandingStatus": {
+      "enum": ["satisfied", "insufficient", "absent", "out_of_scope", "forbidden"]
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "name": "observe_with_current_basis",
+  "doctrine": ["observe_class_admissible_with_minimal_basis"],
+  "intent": {
+    "actor": "claude-code",
+    "actor_standing": { "class": "observe", "provenance": "caller_asserted" },
+    "intended_action": "fs.read",
+    "operation_class": "observe",
+    "target": "src/lib.rs",
+    "scope_assertion": {
+      "scope_includes_target": true,
+      "provenance": "caller_asserted",
+      "evidence_refs": ["policy://repo/CLAUDE.md#read-scope"]
+    },
+    "claimed_basis": {
+      "rule": "user requested file read in current session",
+      "evidence_refs": [
+        {
+          "ref": "session://prompt#current",
+          "kind": "prompt",
+          "issuer": "user",
+          "subject": "claude-code",
+          "valid_from": "2026-05-09T11:00:00Z",
+          "valid_until": "2026-05-09T13:00:00Z",
+          "status": "valid"
+        }
+      ]
+    },
+    "precedence": {
+      "resolution": "active",
+      "provenance": "caller_asserted",
+      "evidence_refs": []
+    },
+    "revocation": {
+      "basis_revoked": false,
+      "standing_forbidden": false,
+      "provenance": "caller_asserted",
+      "evidence_refs": []
+    },
+    "expected_effect": "read file contents",
+    "call_timestamp": "2026-05-09T12:00:00Z"
+  },
+  "expected": {
+    "surface_verdict": "authorized",
+    "dimensions": {
+      "basis": { "status": "satisfied" },
+      "precedence": { "status": "satisfied" },
+      "standing": { "status": "satisfied" }
+    },
+    "must_include_reason_codes": ["BASIS_OK", "PRECEDENCE_OK", "STANDING_OK"],
+    "must_forbid": []
+  }
+}

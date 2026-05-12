@@ -1,0 +1,59 @@
+{
+  "name": "open_finding_is_admissible",
+  "doctrine": [
+    "openFinding_is_admissible",
+    "soft_basis_insufficiency_is_gap_not_failure"
+  ],
+  "intent": {
+    "actor": "claude-code",
+    "actor_standing": { "class": "execute", "provenance": "caller_asserted" },
+    "intended_action": "deploy.staging",
+    "operation_class": "execute",
+    "target": "service/staging",
+    "scope_assertion": {
+      "scope_includes_target": true,
+      "provenance": "caller_asserted",
+      "evidence_refs": ["policy://repo/CLAUDE.md#deploy-scope"]
+    },
+    "claimed_basis": {
+      "rule": "deployment to staging is allowed under policy",
+      "evidence_refs": [
+        {
+          "ref": "policy://repo/SPEC.md#deploy-policy",
+          "kind": "policy_ref",
+          "issuer": "repo-owner",
+          "subject": "claude-code",
+          "valid_from": "2026-05-09T00:00:00Z",
+          "valid_until": "2026-05-10T00:00:00Z",
+          "status": "valid"
+        }
+      ]
+    },
+    "precedence": {
+      "resolution": "active",
+      "provenance": "caller_asserted",
+      "evidence_refs": []
+    },
+    "revocation": {
+      "basis_revoked": false,
+      "standing_forbidden": false,
+      "provenance": "caller_asserted",
+      "evidence_refs": []
+    },
+    "expected_effect": "deploy service to staging",
+    "call_timestamp": "2026-05-09T12:00:00Z"
+  },
+  "expected": {
+    "surface_verdict": "gap",
+    "dimensions": {
+      "basis": { "status": "insufficient" },
+      "precedence": { "status": "satisfied" },
+      "standing": { "status": "satisfied" }
+    },
+    "must_include_reason_codes": [
+      "BASIS_INSUFFICIENT_FOR_EXECUTE",
+      "OPEN_FINDING_ACCOUNTED"
+    ],
+    "must_forbid": ["mutate_target"]
+  }
+}

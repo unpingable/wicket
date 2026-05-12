@@ -1,0 +1,56 @@
+{
+  "name": "silent_downgrade_without_waiver",
+  "documentation_only": true,
+  "doctrine": [
+    "operation_class_mislabeling_undetectable_from_input_alone"
+  ],
+  "note": "Caller declares operation_class = execute when the action is actually irreversible (bind). Wicket cannot detect the mismatch from a single call's input — it sees only the declared class. This fixture documents the boundary; an external oracle would be needed to flag the mislabel. Not executed by CI.",
+  "intent": {
+    "actor": "claude-code",
+    "actor_standing": { "class": "execute", "provenance": "caller_asserted" },
+    "intended_action": "git.push.force",
+    "operation_class": "execute",
+    "target": "main",
+    "scope_assertion": {
+      "scope_includes_target": true,
+      "provenance": "caller_asserted",
+      "evidence_refs": ["policy://repo/CLAUDE.md#push-scope"]
+    },
+    "claimed_basis": {
+      "rule": "policy + tool trace",
+      "evidence_refs": [
+        {
+          "ref": "policy://repo/SPEC.md#push",
+          "kind": "policy_ref",
+          "issuer": "repo-owner",
+          "subject": "claude-code",
+          "valid_from": "2026-05-09T00:00:00Z",
+          "valid_until": "2026-05-10T00:00:00Z",
+          "status": "valid"
+        },
+        {
+          "ref": "tool://git/status",
+          "kind": "tool_trace",
+          "issuer": "ops-tool",
+          "subject": "claude-code",
+          "valid_from": "2026-05-09T11:30:00Z",
+          "valid_until": "2026-05-09T13:00:00Z",
+          "status": "valid"
+        }
+      ]
+    },
+    "precedence": {
+      "resolution": "active",
+      "provenance": "caller_asserted",
+      "evidence_refs": []
+    },
+    "revocation": {
+      "basis_revoked": false,
+      "standing_forbidden": false,
+      "provenance": "caller_asserted",
+      "evidence_refs": []
+    },
+    "expected_effect": "force-push to main (irreversible relative to prior history)",
+    "call_timestamp": "2026-05-09T12:00:00Z"
+  }
+}

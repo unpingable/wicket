@@ -1,0 +1,136 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://wicket.dev/schemas/intent.schema.json",
+  "title": "Wicket Intent",
+  "description": "Single-call admissibility preflight input. SPEC.md §4.",
+  "type": "object",
+  "required": [
+    "actor",
+    "actor_standing",
+    "intended_action",
+    "operation_class",
+    "target",
+    "claimed_basis",
+    "precedence",
+    "revocation",
+    "expected_effect",
+    "call_timestamp"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "actor": { "type": "string", "minLength": 1 },
+    "actor_standing": {
+      "type": "object",
+      "required": ["class", "provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "class": { "$ref": "#/$defs/StandingClass" },
+        "provenance": { "$ref": "#/$defs/Provenance" }
+      }
+    },
+    "intended_action": { "type": "string", "minLength": 1 },
+    "operation_class": { "$ref": "#/$defs/OperationClass" },
+    "target": { "type": "string", "minLength": 1 },
+    "scope_assertion": {
+      "type": "object",
+      "required": ["scope_includes_target", "provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "scope_includes_target": { "type": "boolean" },
+        "provenance": { "$ref": "#/$defs/Provenance" },
+        "evidence_refs": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "claimed_basis": {
+      "type": "object",
+      "required": ["rule"],
+      "additionalProperties": false,
+      "properties": {
+        "rule": { "type": "string" },
+        "evidence_refs": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/Evidence" }
+        }
+      }
+    },
+    "precedence": {
+      "type": "object",
+      "required": ["resolution", "provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "resolution": { "$ref": "#/$defs/PrecedenceResolution" },
+        "superseded_by": { "type": ["string", "null"] },
+        "provenance": { "$ref": "#/$defs/Provenance" },
+        "evidence_refs": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "revocation": {
+      "type": "object",
+      "required": ["basis_revoked", "standing_forbidden", "provenance"],
+      "additionalProperties": false,
+      "properties": {
+        "basis_revoked": { "type": "boolean" },
+        "standing_forbidden": { "type": "boolean" },
+        "provenance": { "$ref": "#/$defs/Provenance" },
+        "evidence_refs": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "expected_effect": { "type": "string" },
+    "call_timestamp": { "type": "string", "format": "date-time" },
+    "prev_receipt_hash": { "type": ["string", "null"] }
+  },
+  "$defs": {
+    "OperationClass": {
+      "enum": ["observe", "interpret", "recommend", "authorize", "execute", "bind"]
+    },
+    "StandingClass": {
+      "enum": ["observe", "interpret", "recommend", "authorize", "execute"]
+    },
+    "Provenance": {
+      "enum": ["caller_asserted", "attested", "verified"]
+    },
+    "PrecedenceResolution": {
+      "enum": ["active", "superseded", "ambiguous", "unresolved"]
+    },
+    "EvidenceKind": {
+      "enum": [
+        "prompt",
+        "file_hash",
+        "test_log",
+        "tool_output",
+        "tool_trace",
+        "command_output",
+        "policy_ref",
+        "prior_receipt",
+        "human_confirmation",
+        "actor_assertion"
+      ]
+    },
+    "ValidityStatus": {
+      "enum": ["valid", "stale", "unavailable"]
+    },
+    "Evidence": {
+      "type": "object",
+      "required": ["ref", "kind", "issuer", "subject", "valid_from", "valid_until", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "ref": { "type": "string" },
+        "kind": { "$ref": "#/$defs/EvidenceKind" },
+        "issuer": { "type": "string" },
+        "subject": { "type": "string" },
+        "valid_from": { "type": "string", "format": "date-time" },
+        "valid_until": { "type": "string", "format": "date-time" },
+        "status": { "$ref": "#/$defs/ValidityStatus" }
+      }
+    }
+  }
+}

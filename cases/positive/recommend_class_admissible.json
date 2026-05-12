@@ -1,0 +1,64 @@
+{
+  "name": "recommend_class_admissible",
+  "doctrine": [
+    "recommend_class_yields_advisory_only_not_authorized"
+  ],
+  "intent": {
+    "actor": "claude-code",
+    "actor_standing": { "class": "recommend", "provenance": "caller_asserted" },
+    "intended_action": "patch.draft",
+    "operation_class": "recommend",
+    "target": "src/lib.rs",
+    "scope_assertion": {
+      "scope_includes_target": true,
+      "provenance": "caller_asserted",
+      "evidence_refs": ["policy://repo/CLAUDE.md#recommend-scope"]
+    },
+    "claimed_basis": {
+      "rule": "user asked for a refactor recommendation",
+      "evidence_refs": [
+        {
+          "ref": "session://prompt#current",
+          "kind": "prompt",
+          "issuer": "user",
+          "subject": "claude-code",
+          "valid_from": "2026-05-09T11:00:00Z",
+          "valid_until": "2026-05-09T13:00:00Z",
+          "status": "valid"
+        },
+        {
+          "ref": "file://src/lib.rs#sha256:abc",
+          "kind": "file_hash",
+          "issuer": "filesystem",
+          "subject": "claude-code",
+          "valid_from": "2026-05-09T11:00:00Z",
+          "valid_until": "2026-05-09T13:00:00Z",
+          "status": "valid"
+        }
+      ]
+    },
+    "precedence": {
+      "resolution": "active",
+      "provenance": "caller_asserted",
+      "evidence_refs": []
+    },
+    "revocation": {
+      "basis_revoked": false,
+      "standing_forbidden": false,
+      "provenance": "caller_asserted",
+      "evidence_refs": []
+    },
+    "expected_effect": "produce a textual recommendation; no mutation",
+    "call_timestamp": "2026-05-09T12:00:00Z"
+  },
+  "expected": {
+    "surface_verdict": "advisory_only",
+    "dimensions": {
+      "basis": { "status": "satisfied" },
+      "precedence": { "status": "satisfied" },
+      "standing": { "status": "satisfied" }
+    },
+    "must_include_reason_codes": ["BASIS_OK", "PRECEDENCE_OK", "STANDING_OK"],
+    "must_forbid": ["execute_recommendation_as_authorization"]
+  }
+}

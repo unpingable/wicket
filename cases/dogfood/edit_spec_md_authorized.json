@@ -1,0 +1,93 @@
+{
+  "name": "dogfood_edit_spec_md_authorized",
+  "doctrine": [
+    "wrapper_can_authorize_edit_with_local_policy_evidence"
+  ],
+  "note": "Captured from `wicket edit SPEC.md --because \"document the wrapper\" --standing execute`. Auto-detected CLAUDE.md/SPEC.md/README.md as policy_ref + read SPEC.md as file_hash satisfies the execute matrix.",
+  "intent": {
+    "actor": "claude-code",
+    "actor_standing": {
+      "class": "execute",
+      "provenance": "caller_asserted"
+    },
+    "intended_action": "fs.edit",
+    "operation_class": "execute",
+    "target": "SPEC.md",
+    "scope_assertion": {
+      "scope_includes_target": true,
+      "provenance": "caller_asserted",
+      "evidence_refs": [
+        "policy:///home/jbeck/git/wicket/SPEC.md",
+        "policy:///home/jbeck/git/wicket/README.md"
+      ]
+    },
+    "claimed_basis": {
+      "rule": "document the wrapper",
+      "evidence_refs": [
+        {
+          "ref": "policy:///home/jbeck/git/wicket/SPEC.md",
+          "kind": "policy_ref",
+          "issuer": "repo-owner",
+          "subject": "claude-code",
+          "valid_from": "2026-05-09T21:39:41Z",
+          "valid_until": "2026-05-09T23:39:41Z",
+          "status": "valid"
+        },
+        {
+          "ref": "policy:///home/jbeck/git/wicket/README.md",
+          "kind": "policy_ref",
+          "issuer": "repo-owner",
+          "subject": "claude-code",
+          "valid_from": "2026-05-09T21:39:41Z",
+          "valid_until": "2026-05-09T23:39:41Z",
+          "status": "valid"
+        },
+        {
+          "ref": "file://SPEC.md#sha256:5d6239c2950d22723f280aa9aa0da2af2280441ea2e2b6ea0233eaa93467a4be",
+          "kind": "file_hash",
+          "issuer": "filesystem",
+          "subject": "claude-code",
+          "valid_from": "2026-05-09T22:39:41Z",
+          "valid_until": "2026-05-09T23:39:41Z",
+          "status": "valid"
+        }
+      ]
+    },
+    "precedence": {
+      "resolution": "active",
+      "provenance": "caller_asserted",
+      "evidence_refs": []
+    },
+    "revocation": {
+      "basis_revoked": false,
+      "standing_forbidden": false,
+      "provenance": "caller_asserted",
+      "evidence_refs": []
+    },
+    "expected_effect": "modify SPEC.md",
+    "call_timestamp": "2026-05-09T22:39:41Z"
+  },
+  "expected": {
+    "surface_verdict": "authorized",
+    "dimensions": {
+      "basis": {
+        "status": "satisfied"
+      },
+      "precedence": {
+        "status": "satisfied"
+      },
+      "standing": {
+        "status": "satisfied"
+      }
+    },
+    "must_include_reason_codes": [
+      "BASIS_OK",
+      "PRECEDENCE_OK",
+      "STANDING_OK"
+    ],
+    "must_forbid": [],
+    "must_allow": [
+      "execute_intended_action"
+    ]
+  }
+}
