@@ -160,7 +160,26 @@ The previous v0.2 stance (self-cert disregarded but not failing) is recorded as 
 
 ### 4.5 Time
 
-`call_timestamp` is the only time Wicket consults. Validity comparisons use this field. The library accepts it as data; the CLI populates it from system time at process start unless `--call-timestamp` is supplied. Tests pass it explicitly.
+**Time enters as evidence, not ambient reality.**
+
+The kernel must not consult wall-clock time. All temporal evaluation runs over caller-supplied fields:
+
+- `call_timestamp` (Intent) — the evaluation time for this preflight.
+- `valid_from` / `valid_until` (Evidence) — freshness window for each evidence ref.
+- `issued_at` / `expires_at` (grant; §15.1) — window during which a grant is honored.
+- `revocation.evidence_refs` — pointers to receipts/policies that established revocation; the kernel does not dereference them.
+
+Timestamps arrive as RFC 3339 strings and are parsed to typed `DateTime<Utc>` at the kernel boundary (`parse_ts` in `rules.rs`, `parse_iso` in `grant.rs`). Comparisons run over the parsed typed values; the kernel does not perform string ordering on raw timestamp fields. Unparseable timestamps in the Intent route to `unaccounted` (exit 2); unparseable timestamps in Evidence disqualify that evidence ref.
+
+The wrapper, CLI, and cook layers (`cook.rs`, `main.rs`) may stamp time from the system clock when populating Intent and Evidence fields. The kernel modules (`lib.rs`, `model.rs`, `rules.rs`, `grant.rs`, `verdict.rs`, `receipt.rs`) **must not** call `Utc::now`, `Local::now`, `SystemTime::now`, `Instant::now`, `OffsetDateTime::now_utc`, or any equivalent ambient-clock function. This is enforced by `tests/kernel_atemporality.rs`.
+
+**Tripwires**
+
+- A receipt's timestamp records evaluation time supplied by the cook layer; it cannot launder artifact time.
+- Evidence freshness is evaluated against `call_timestamp`, not ambient `now()` — the same Intent produces the same verdict regardless of when the kernel re-evaluates it.
+- Future-dated revocation does not affect present standing; the kernel reads `revocation.basis_revoked` as a boolean the caller cooked at evaluation time, not by dereferencing an `effective_at` field.
+
+The CLI populates `call_timestamp` from system time at process start unless `--call-timestamp` is supplied; tests pass it explicitly.
 
 ### 4.6 Scope
 
