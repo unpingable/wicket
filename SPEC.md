@@ -1,12 +1,12 @@
 # Wicket Specification
 
-**Status:** v0.3 draft, 2026-05-09. Implementation-ready pending freeze. The spec leads; the code follows literally.
+**Status:** v0.3 draft, 2026-05-09 (amended 2026-05-13). The spec leads; the code follows literally.
 
 > Wicket does not decide truth. Wicket decides whether an intended operation has accounted authority to proceed.
 >
 > **Caller cooks context. Wicket accounts for whether that cooked context is sufficient.**
 
-Changes from v0.2: basis status splits into soft (`insufficient`/`stale`/`absent`/`ambiguous` → gap) and hard (`revoked`/`inadmissible` → denied), resolving the openFinding-vs-§7.3 conflict; `inadmissible` added as a basis status for self-certification and bind-without-human-confirmation; top-level `revocation` field added so Wicket can derive `basis.revoked` and `standing.forbidden` from caller-cooked context without dereferencing receipts or policy; §7.3 renumbered to §7.3; §10 fixture #12 renamed `bind_without_supporting_evidence`; §7 adds explicit caller-asserted-authorized warning; reserved-provenance behavior made explicit (schema-allowed → model-unaccounted, exit 2); `evidence_ref_hashes` renamed `evidence_ref_hashes`; reason-code registry updated for soft/hard split.
+Changes from v0.2: basis status splits into soft (`insufficient`/`stale`/`absent`/`ambiguous` → gap) and hard (`revoked`/`inadmissible` → denied), resolving the openFinding-vs-§7.3 conflict; `inadmissible` added as a basis status for self-certification and bind-without-human-confirmation; top-level `revocation` field added so Wicket can derive `basis.revoked` and `standing.forbidden` from caller-cooked context without dereferencing receipts or policy; §7.3 renumbered to §7.3; §10 fixture #12 renamed `bind_without_supporting_evidence`; §7 adds explicit caller-asserted-authorized warning; reserved-provenance behavior made explicit (schema-allowed → model-unaccounted, exit 2); `evidence_ref_hashes` renamed `evidence_ref_hashes`; reason-code registry updated for soft/hard split. In-draft amendment (2026-05-13): §4.5 (Time) expanded into the explicit "Time enters as evidence, not ambient reality" invariant with the kernel/wrapper boundary and `tests/kernel_atemporality.rs` as guard.
 
 Changes from v0.1: `scope_assertion` lifted to a top-level structured field with its own provenance and `evidence_refs`; `precedence` gains `evidence_refs` and the `unresolved` resolution value; reason codes `ACCOUNTING_*` renamed to `OPEN_FINDING_ACCOUNTED` / `UNACCOUNTED_INPUT`; `STANDING_SCOPE_NOT_ASSERTED` split into `SCOPE_NOT_ASSERTED` / `SCOPE_CALLER_ASSERTED_UNVERIFIED`; `PRECEDENCE_UNRESOLVED` added; precedence input value renamed `satisfied` → `active`.
 

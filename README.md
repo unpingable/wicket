@@ -188,10 +188,12 @@ attached as a `policy_ref` evidence ref.
 cargo test
 ```
 
-The fixture runner (2 integration tests, both green) walks `cases/`, skips
-the `documentation_only/` bucket, and asserts each fixture's `expected`
-block matches `wicket::check`'s output. Receipts are also asserted to be
-content-addressed and stable across repeated calls.
+The fixture runner walks `cases/`, skips the `documentation_only/`
+bucket, and asserts each fixture's `expected` block matches
+`wicket::check`'s output. Receipts are also asserted to be
+content-addressed and stable across repeated calls. A kernel-atemporality
+guard (`tests/kernel_atemporality.rs`) enforces SPEC §4.5. 3 integration
+tests, all green.
 
 Fixture inventory (current):
 
