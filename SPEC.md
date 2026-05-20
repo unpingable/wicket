@@ -18,7 +18,7 @@ Changes from v0: input model adds `call_timestamp`, structured `actor_standing`;
 
 Wicket is a small Rust CLI/library that performs **admissibility preflight** for a single intended agentic operation. Given a structured intent and the evidence the actor cites for it, Wicket returns a bounded verdict, the dimensional accounting that produced that verdict, the actions the actor may and may not take next, and a receipt obligation.
 
-Wicket is the **handle**. It is called once per intended operation. It is stateless across calls. It does not orchestrate, schedule, store, route, or interpret prose authority. **Wicket is a verifier, not a resolver.** Callers cook scope and precedence; Wicket reads the cooked answer and verifies it against the operation.
+Wicket is the **handle**. It is called once per intended operation. It is stateless across calls. It does not orchestrate, schedule, store, route, or interpret prose authority. **Wicket is an accounting kernel, not a resolver.** Callers cook scope and precedence; Wicket reads the cooked answer and accounts for it against the operation.
 
 Wicket sits between two existing projects:
 

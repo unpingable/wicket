@@ -231,6 +231,15 @@ See [SPEC.md §3](./SPEC.md). Eight load-bearing lines. Don't add a ninth.
 - `agent_governor` — research / constitutional substrate.
 - `~/git/lean/LeanProofs/Admissibility/` — formal substrate; Wicket fixtures
   should be reproducible by the kernel.
+- `verifier` — sibling Python/Z3 admissibility solver. Verifier evaluates
+  caller-supplied facts and rules and emits constraint verdicts; Wicket
+  accounts caller-supplied admissibility dimensions and emits verdict
+  receipts. They share terms such as basis, precedence, and standing, but
+  the terms are not wire-compatible: Wicket emits those dimensions on every
+  check, while verifier emits per-dimension diagnostics only for submitted
+  rule kinds. Neither project imports the other today. Treat verifier
+  verdicts and Wicket receipts as composable evidence surfaces, not as
+  interchangeable outputs.
 
 ## License
 
