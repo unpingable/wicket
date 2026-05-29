@@ -150,6 +150,11 @@ wicket/
     documentation_only/    # not executed by CI; marks boundaries
   skills/
     preflight.md           # how an agent should call wicket
+  docs/
+    INTEROP.md             # in-toto adoption (verbatim from cartography)
+  examples/
+    grants/                # sample standing grants
+    wicket_to_intoto.py    # bridge: Wicket verdict → DSSE in-toto attestation
   tests/
     fixtures.rs            # walks cases/ and asserts expected verdicts
 ```
@@ -181,6 +186,19 @@ Wrapper-level grant rejection reasons (printed to stderr, exit 65):
 Grants are a **wrapper convention**, not kernel doctrine. The kernel never
 sees a grant directly — it only sees the resulting Intent with the grant
 attached as a `policy_ref` evidence ref.
+
+## Interop
+
+A Wicket verdict expresses cleanly as an in-toto v1 Statement wrapped in a
+DSSE envelope — the same format `cosign attest` produces and
+`cosign verify-attestation` consumes. The subject digest is exactly Wicket's
+`input_hash`, so any in-toto verifier asking "does this attestation match my
+artifact?" is checking the same content-address Wicket already minted.
+Evidence custody survives the hop into a standard format.
+
+See [`docs/INTEROP.md`](./docs/INTEROP.md) for the full mapping and signing
+discipline (prefer keyed over Sigstore keyless). A working bridge lives at
+[`examples/wicket_to_intoto.py`](./examples/wicket_to_intoto.py).
 
 ## Tests
 
