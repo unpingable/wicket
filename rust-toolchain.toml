@@ -1,0 +1,7 @@
+# Pinned to match the constellation MSRV floor (Rust 1.85).
+# Rationale: the edition2024 dependency cluster (clap_lex, idna_adapter,
+# time-core, serde_jcs 0.2, etc.) stabilizes at 1.85; pinning makes
+# build failures a clear MSRV message rather than an opaque cascade.
+# See ~/git/cartography/audit/2026-05-28-external-reproducibility-report.md.
+[toolchain]
+channel = "1.85"

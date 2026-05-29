@@ -41,6 +41,10 @@ regime detector. A claim history tracker. See [SPEC.md §2](./SPEC.md).
 
 ## Build
 
+Requires **Rust ≥ 1.85** (the constellation MSRV floor — pinned in
+[`rust-toolchain.toml`](./rust-toolchain.toml); rustup will fetch it
+automatically on first build).
+
 ```bash
 cargo build --release
 ```
