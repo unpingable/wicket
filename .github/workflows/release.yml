@@ -1,0 +1,36 @@
+name: release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write  # needed to create/update the GitHub Release
+
+jobs:
+  release-linux-x86_64:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain (per rust-toolchain.toml)
+        run: rustup show active-toolchain || rustup toolchain install
+
+      - name: Test
+        run: cargo test --release --locked
+
+      - name: Build
+        run: cargo build --release --locked
+
+      - name: Stage artifact
+        run: |
+          mkdir -p dist
+          install -m 0755 target/release/wicket dist/wicket-${{ github.ref_name }}-linux-x86_64
+          (cd dist && sha256sum wicket-${{ github.ref_name }}-linux-x86_64 \
+            > wicket-${{ github.ref_name }}-linux-x86_64.sha256)
+
+      - name: Upload to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*
+          generate_release_notes: true
