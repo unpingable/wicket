@@ -68,6 +68,23 @@ The wrapper / cook layer may accept `StandingDecision` and Continuity
 `relied_on` refs. The kernel continues to see only the cooked Intent. The
 "caller cooks context" spine is non-negotiable.
 
+Discipline the cook must follow when it ratifies (cf. the
+cook-translation-authority maxim in
+`~/git/wlp/WLP_RECEIVER_GATE_CANDIDATE.md`):
+
+> Cooking is translation under receiver authority, not ontology
+> inheritance. The adapter may translate testimony into policy
+> vocabulary; it may not let testimony choose the vocabulary.
+
+Concretely: a future `caller_assertion_standing` field on cooked
+Intent does not inherit Standing's wire names by reflex. The cook
+picks the Wicket-vocabulary field that carries the load
+Standing's field carries — even when both projects happen to use
+the same noun. The receiver-gate WLP↔Wicket bridge worked
+precisely because the cook treated `prior_receipt`,
+`command_output`, and `policy_ref` as Wicket-owned names, not
+import-aliases.
+
 ## Fixture additions (anticipated, `documentation_only/`)
 
 - Remote standing present but not enough for action.
