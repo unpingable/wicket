@@ -17,6 +17,37 @@ The full specification is [SPEC.md](./SPEC.md). Wicket is the embarrassingly
 literal Rust translation of that spec; if the two disagree, SPEC.md is
 authoritative and the code is the bug.
 
+## 30-second specimen
+
+An agent with valid standing asks to make an irreversible commit. Everything
+ordinary infra checks is green — and Wicket denies it anyway, because an
+irreversible bind requires a fresh human confirmation it cannot show:
+
+```bash
+$ wicket commit --because "publish the release" --irreversible --standing execute --brief
+DENIED  commit /path/to/repo@HEAD
+  reasons: BASIS_INADMISSIBLE_BIND_REQUIRES_HUMAN_CONFIRMATION, PRECEDENCE_OK, STANDING_OK
+  allowed: supply_admissible_basis
+  forbidden: mutate_target, claim_authorization
+  receipt: sha256:38a3b67b…
+```
+
+Standing: satisfied. Precedence: satisfied. Denied on *basis* — the one
+dimension a confident agent cannot assert for itself. Supply the confirmation
+and the same intent admits:
+
+```bash
+$ wicket commit --because "publish the release" --irreversible --standing execute \
+    --human-confirm "release-mgr-2026-06-12" --brief
+AUTHORIZED  commit /path/to/repo@HEAD
+  reasons: BASIS_OK, PRECEDENCE_OK, STANDING_OK
+  allowed: execute_intended_action
+  receipt: sha256:93a3d1b0…
+```
+
+Both verdicts emit immutable receipts (the hashes vary with your repo state).
+Sample standing grants live in [`examples/grants/`](./examples/grants/).
+
 ## What it is
 
 - **Single-call.** One intent in, one verdict + receipt out. Stateless across
