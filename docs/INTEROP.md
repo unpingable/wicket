@@ -1,11 +1,13 @@
 <!--
 Adopted verbatim from cartography on 2026-05-28.
-Source: ~/git/cartography/doctrine/wicket-intoto-interop.md (ARCHIVED
-2026-06-14; archival committed 2026-07-13 — cartography absorbed by agent_gov).
-Discipline: adopted verbatim; if amendment is needed, file feedback with
-agent_gov (constellation coordination venue; topology index at
-agent_gov/docs/CONSTELLATION_MAP.md) and the doctrine evolves there.
-Do not fork locally.
+Source: ~/git/cartography/doctrine/wicket-intoto-interop.md.
+Venue update 2026-07-26: cartography was REACTIVATED as the canonical
+records/doctrine venue under the operator canonicalization direction; the
+2026-06-14/2026-07-13 archival note that routed feedback to agent_gov (and
+named agent_gov/docs/CONSTELLATION_MAP.md as topology index) is superseded.
+File doctrine feedback in cartography; the current topology records are
+cartography's operational-generation and constitutional-office-map files.
+Discipline unchanged: adopted verbatim; do not fork locally.
 -->
 
 # Wicket verdicts as in-toto attestations

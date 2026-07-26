@@ -1,5 +1,19 @@
 # Wicket
 
+> **Status (2026-07-26): the admissibility-preflight kernel — live,
+> separately instantiated; its "admissibility membrane" office doctrine
+> remains candidate/non-binding.** Wicket is consumed in code today by
+> Night Shift's MVP-A cook/Wicket/WLP tail (`wicket::check` via Cargo path
+> dependency) and is not a decision office of the supported four-office
+> vertical (Nightshift → AG ng → Docket → NQ). Its documented relations:
+> classic Agent Governor ("operational mint"; Wicket fixtures are the
+> contract surface) and transition-kernel (a Wicket verdict is advisory
+> input; that office re-decides). **No record defines the Wicket ↔ AG ng
+> relation** — AG ng hosts its own admission-shaped checks for its one
+> effect class and has not absorbed Wicket; whether a future generic
+> admission membrane sits upstream of AG ng is an open operator ruling.
+> Nothing here is deprecated.
+
 Admissibility preflight for agentic operations. A small Rust CLI/library that
 classifies one intended agentic operation, accounts for whether the cited
 basis / precedence / standing are sufficient, and emits an immutable receipt.
