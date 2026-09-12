@@ -58,7 +58,6 @@ pub fn build(
 /// the entire outcome with `receipt_id` elided.
 pub fn seal(outcome: &mut Outcome) {
     outcome.receipt.receipt_id = String::new();
-    let canonical =
-        serde_jcs::to_vec(outcome).expect("canonical JSON serialization of outcome");
+    let canonical = serde_jcs::to_vec(outcome).expect("canonical JSON serialization of outcome");
     outcome.receipt.receipt_id = sha256_hex(&canonical);
 }

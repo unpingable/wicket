@@ -13,12 +13,12 @@
 
 #![allow(dead_code)]
 
+#[path = "../examples/cook_from_diff/cook.rs"]
+mod cook;
 #[path = "../examples/cook_from_diff/diff.rs"]
 mod diff;
 #[path = "../examples/cook_from_diff/surfaces.rs"]
 mod surfaces;
-#[path = "../examples/cook_from_diff/cook.rs"]
-mod cook;
 
 use cook::{cook_diff, CookOpts};
 use diff::parse;

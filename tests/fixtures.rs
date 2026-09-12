@@ -56,7 +56,9 @@ fn collect_fixtures(root: &Path) -> Vec<PathBuf> {
 }
 
 fn walk(dir: &Path, out: &mut Vec<PathBuf>) {
-    let Ok(entries) = fs::read_dir(dir) else { return };
+    let Ok(entries) = fs::read_dir(dir) else {
+        return;
+    };
     for entry in entries.flatten() {
         let path = entry.path();
         if path.is_dir() {
@@ -76,8 +78,8 @@ fn all_executable_fixtures_match_expected() {
 
     for path in collect_fixtures(&root) {
         let raw = fs::read_to_string(&path).expect("read fixture");
-        let fixture: Fixture = serde_json::from_str(&raw)
-            .unwrap_or_else(|e| panic!("parse {}: {e}", path.display()));
+        let fixture: Fixture =
+            serde_json::from_str(&raw).unwrap_or_else(|e| panic!("parse {}: {e}", path.display()));
 
         if fixture.documentation_only {
             documented += 1;
@@ -139,10 +141,7 @@ fn all_executable_fixtures_match_expected() {
         }
         for a in &expected.must_allow {
             if !outcome.allowed.iter().any(|c| c == a) {
-                local.push(format!(
-                    "missing allowed {a}; got {:?}",
-                    outcome.allowed
-                ));
+                local.push(format!("missing allowed {a}; got {:?}", outcome.allowed));
             }
         }
 
@@ -156,10 +155,11 @@ fn all_executable_fixtures_match_expected() {
         }
     }
 
-    println!(
-        "executed {executed} fixtures, skipped {documented} documentation_only"
+    println!("executed {executed} fixtures, skipped {documented} documentation_only");
+    assert!(
+        executed >= 13,
+        "expected at least 13 executable fixtures, got {executed}"
     );
-    assert!(executed >= 13, "expected at least 13 executable fixtures, got {executed}");
 
     if !failures.is_empty() {
         panic!(
@@ -184,18 +184,21 @@ fn receipts_are_content_addressed_and_stable() {
         let b = wicket::check(&fixture.intent);
         assert_eq!(
             a.receipt.receipt_id, b.receipt.receipt_id,
-            "fixture {}: receipt_id not stable", fixture.name
+            "fixture {}: receipt_id not stable",
+            fixture.name
         );
         assert!(
             a.receipt.receipt_id.starts_with("sha256:"),
             "fixture {}: receipt_id not sha256-prefixed: {}",
-            fixture.name, a.receipt.receipt_id
+            fixture.name,
+            a.receipt.receipt_id
         );
         assert_eq!(
             a.receipt.receipt_id.len(),
             "sha256:".len() + 64,
             "fixture {}: receipt_id wrong length: {}",
-            fixture.name, a.receipt.receipt_id
+            fixture.name,
+            a.receipt.receipt_id
         );
     }
 }

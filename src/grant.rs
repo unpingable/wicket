@@ -60,13 +60,34 @@ impl Grant {
 #[derive(Debug)]
 pub enum GrantValidation {
     Valid,
-    SchemaMismatch { found: String, expected: String },
-    ActorMismatch { grant: String, intent: String },
-    ScopeOutOfRange { scope_root: PathBuf, target: PathBuf },
-    OperationNotPermitted { permitted: Vec<String>, requested: String },
-    Expired { expires_at: String, now: String },
-    NotYetValid { issued_at: String, now: String },
-    UnparseableTimestamp { field: &'static str, value: String },
+    SchemaMismatch {
+        found: String,
+        expected: String,
+    },
+    ActorMismatch {
+        grant: String,
+        intent: String,
+    },
+    ScopeOutOfRange {
+        scope_root: PathBuf,
+        target: PathBuf,
+    },
+    OperationNotPermitted {
+        permitted: Vec<String>,
+        requested: String,
+    },
+    Expired {
+        expires_at: String,
+        now: String,
+    },
+    NotYetValid {
+        issued_at: String,
+        now: String,
+    },
+    UnparseableTimestamp {
+        field: &'static str,
+        value: String,
+    },
 }
 
 impl std::fmt::Display for GrantValidation {
@@ -168,7 +189,9 @@ pub fn validate(
         Ok(p) => p,
         Err(_) => grant.scope_root.clone(),
     };
-    let target_canon = target.canonicalize().unwrap_or_else(|_| target.to_path_buf());
+    let target_canon = target
+        .canonicalize()
+        .unwrap_or_else(|_| target.to_path_buf());
     if !target_canon.starts_with(&scope_root) {
         return GrantValidation::ScopeOutOfRange {
             scope_root,
@@ -180,7 +203,9 @@ pub fn validate(
 }
 
 fn parse_iso(s: &str) -> Option<DateTime<Utc>> {
-    DateTime::parse_from_rfc3339(s).ok().map(|dt| dt.with_timezone(&Utc))
+    DateTime::parse_from_rfc3339(s)
+        .ok()
+        .map(|dt| dt.with_timezone(&Utc))
 }
 
 /// Build a `policy_ref` Evidence pointing at a validated grant. The
@@ -198,11 +223,7 @@ pub fn grant_evidence(
         .unwrap_or_else(|| compute_grant_id(grant));
     let valid_until = parse_iso(&grant.expires_at).unwrap_or(now);
     Evidence {
-        reference: format!(
-            "wicket-grant://{}#{}",
-            grant_path.display(),
-            id
-        ),
+        reference: format!("wicket-grant://{}#{}", grant_path.display(), id),
         kind: EvidenceKind::PolicyRef,
         issuer: grant.issued_by.clone(),
         subject: actor.to_string(),

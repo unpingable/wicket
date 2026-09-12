@@ -98,14 +98,20 @@ fn finalize(
     };
 
     let mut top_codes = union_codes(&basis, &precedence, &standing);
-    if surface == SurfaceVerdict::Gap && !top_codes.iter().any(|c| c == codes::OPEN_FINDING_ACCOUNTED) {
+    if surface == SurfaceVerdict::Gap
+        && !top_codes.iter().any(|c| c == codes::OPEN_FINDING_ACCOUNTED)
+    {
         top_codes.push(codes::OPEN_FINDING_ACCOUNTED.to_string());
     }
 
     let allowed = allowed_actions(intent, surface, &basis, &precedence, &standing);
     let forbidden = forbidden_actions(surface);
 
-    let dimensions = Dimensions { basis, precedence, standing };
+    let dimensions = Dimensions {
+        basis,
+        precedence,
+        standing,
+    };
     let receipt_partial = receipt::build(intent, &dimensions, &top_codes, obligation);
 
     let mut outcome = Outcome {
@@ -166,9 +172,17 @@ fn unaccounted_outcome(intent: &Intent) -> Outcome {
     ];
     top_codes.dedup();
 
-    let dimensions = Dimensions { basis, precedence, standing };
-    let receipt_partial =
-        receipt::build(intent, &dimensions, &top_codes, ReceiptObligation::ErrorReceipt);
+    let dimensions = Dimensions {
+        basis,
+        precedence,
+        standing,
+    };
+    let receipt_partial = receipt::build(
+        intent,
+        &dimensions,
+        &top_codes,
+        ReceiptObligation::ErrorReceipt,
+    );
 
     let mut outcome = Outcome {
         class: OutcomeClass::Error,
@@ -197,10 +211,9 @@ fn allowed_actions(
 ) -> Vec<String> {
     match surface {
         SurfaceVerdict::Authorized => vec!["execute_intended_action".into()],
-        SurfaceVerdict::AdvisoryOnly => vec![
-            "share_recommendation".into(),
-            "draft_recommendation".into(),
-        ],
+        SurfaceVerdict::AdvisoryOnly => {
+            vec!["share_recommendation".into(), "draft_recommendation".into()]
+        }
         SurfaceVerdict::Denied => denied_allowed(intent, basis, precedence, standing),
         SurfaceVerdict::Gap => gap_allowed(intent, basis, precedence),
         SurfaceVerdict::Unaccounted => vec!["fix_input_and_retry".into()],
@@ -276,14 +289,8 @@ fn forbidden_actions(surface: SurfaceVerdict) -> Vec<String> {
             "execute_recommendation_as_authorization".into(),
             "claim_authorization".into(),
         ],
-        SurfaceVerdict::Denied => vec![
-            "mutate_target".into(),
-            "claim_authorization".into(),
-        ],
-        SurfaceVerdict::Gap => vec![
-            "mutate_target".into(),
-            "claim_authorization".into(),
-        ],
+        SurfaceVerdict::Denied => vec!["mutate_target".into(), "claim_authorization".into()],
+        SurfaceVerdict::Gap => vec!["mutate_target".into(), "claim_authorization".into()],
         SurfaceVerdict::Unaccounted => vec!["proceed_with_unaccounted_intent".into()],
     }
 }

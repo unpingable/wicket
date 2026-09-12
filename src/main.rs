@@ -198,12 +198,24 @@ impl From<ClassArg> for OperationClass {
 fn main() -> ExitCode {
     let cli = Cli::parse();
     match cli.command {
-        Command::Check { input, strict_exit, canonical, brief } => {
-            run_check(input, strict_exit, canonical, brief)
-        }
+        Command::Check {
+            input,
+            strict_exit,
+            canonical,
+            brief,
+        } => run_check(input, strict_exit, canonical, brief),
         Command::Edit {
-            target, because, standing, standing_grant, precedence, human_confirm,
-            mut policy_paths, actor, strict_exit, brief, show_intent,
+            target,
+            because,
+            standing,
+            standing_grant,
+            precedence,
+            human_confirm,
+            mut policy_paths,
+            actor,
+            strict_exit,
+            brief,
+            show_intent,
         } => {
             let cwd = std::env::current_dir().unwrap_or_default();
             for p in auto_detect_policy_paths(&cwd) {
@@ -240,8 +252,18 @@ fn main() -> ExitCode {
             }
         }
         Command::Run {
-            command, because, class, standing, standing_grant, precedence, human_confirm,
-            mut policy_paths, actor, strict_exit, brief, show_intent,
+            command,
+            because,
+            class,
+            standing,
+            standing_grant,
+            precedence,
+            human_confirm,
+            mut policy_paths,
+            actor,
+            strict_exit,
+            brief,
+            show_intent,
         } => {
             let cwd = std::env::current_dir().unwrap_or_default();
             for p in auto_detect_policy_paths(&cwd) {
@@ -279,8 +301,17 @@ fn main() -> ExitCode {
             }
         }
         Command::Commit {
-            because, irreversible, standing, standing_grant, precedence, human_confirm,
-            mut policy_paths, actor, strict_exit, brief, show_intent,
+            because,
+            irreversible,
+            standing,
+            standing_grant,
+            precedence,
+            human_confirm,
+            mut policy_paths,
+            actor,
+            strict_exit,
+            brief,
+            show_intent,
         } => {
             let cwd = std::env::current_dir().unwrap_or_default();
             for p in auto_detect_policy_paths(&cwd) {

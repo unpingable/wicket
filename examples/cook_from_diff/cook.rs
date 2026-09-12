@@ -13,6 +13,7 @@ use crate::diff::{FileChanges, ParsedDiff};
 use crate::surfaces::{classify_path, AuthoritySurface};
 use chrono::{Duration, Utc};
 use sha2::{Digest, Sha256};
+use std::fmt::Write as _;
 use wicket::model::{ActorStanding, ClaimedBasis, Precedence, Revocation, ValidityStatus};
 use wicket::{
     Evidence, EvidenceKind, Intent, OperationClass, PrecedenceResolution, Provenance, StandingClass,
@@ -165,7 +166,11 @@ fn hash_changes(c: &FileChanges) -> String {
         h.update("\n");
     }
     let d = h.finalize();
-    d.iter().map(|b| format!("{:02x}", b)).collect()
+    let mut hex = String::with_capacity(d.len() * 2);
+    for byte in d {
+        write!(&mut hex, "{byte:02x}").expect("writing to String is infallible");
+    }
+    hex
 }
 
 fn fmt_ts(t: chrono::DateTime<Utc>) -> String {

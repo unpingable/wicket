@@ -28,8 +28,9 @@ use wicket::StandingClass;
 fn main() {
     let arg = std::env::args().nth(1);
     let input = match arg {
-        Some(path) => std::fs::read_to_string(&path)
-            .unwrap_or_else(|e| panic!("cannot read {path}: {e}")),
+        Some(path) => {
+            std::fs::read_to_string(&path).unwrap_or_else(|e| panic!("cannot read {path}: {e}"))
+        }
         None => {
             let mut buf = String::new();
             std::io::stdin()

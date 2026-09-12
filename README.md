@@ -1,5 +1,10 @@
 # Wicket
 
+Public repository name: **Constellation Wicket** (`constellation-wicket`). The
+crate and command remain `wicket`. The former `wicket-guard` repository is a
+historical husk; its maintained diff-cooking example and regression live here.
+See [HOWTO.md](HOWTO.md) for the bounded lane.
+
 > **Status (2026-07-26): the admissibility-preflight kernel — live,
 > separately instantiated; its "admissibility membrane" office doctrine
 > remains candidate/non-binding.** Wicket is consumed in code today by

@@ -61,7 +61,9 @@ pub mod codes {
 // ---------------------------------------------------------------------------
 
 pub(crate) fn parse_ts(s: &str) -> Option<DateTime<Utc>> {
-    DateTime::parse_from_rfc3339(s).ok().map(|dt| dt.with_timezone(&Utc))
+    DateTime::parse_from_rfc3339(s)
+        .ok()
+        .map(|dt| dt.with_timezone(&Utc))
 }
 
 /// An evidence ref is "fresh" when its `status` is `valid` AND `valid_until`
@@ -91,7 +93,10 @@ pub fn derive_basis(intent: &Intent) -> DimensionResult<BasisStatus> {
     // (1) Hard: revocation.basis_revoked = true → revoked → denied.
     if intent.revocation.basis_revoked {
         codes.push(codes::BASIS_REVOKED.to_string());
-        return DimensionResult { status: BasisStatus::Revoked, reason_codes: codes };
+        return DimensionResult {
+            status: BasisStatus::Revoked,
+            reason_codes: codes,
+        };
     }
 
     // (2) Hard: any self-certified evidence ref → inadmissible → denied.
@@ -102,7 +107,10 @@ pub fn derive_basis(intent: &Intent) -> DimensionResult<BasisStatus> {
         .any(|e| is_self_cert(e, &intent.actor))
     {
         codes.push(codes::BASIS_INADMISSIBLE_SELF_CERTIFIED.to_string());
-        return DimensionResult { status: BasisStatus::Inadmissible, reason_codes: codes };
+        return DimensionResult {
+            status: BasisStatus::Inadmissible,
+            reason_codes: codes,
+        };
     }
 
     let call_ts = match parse_ts(&intent.call_timestamp) {
@@ -111,16 +119,21 @@ pub fn derive_basis(intent: &Intent) -> DimensionResult<BasisStatus> {
             // Unparseable call_timestamp is an unaccounted error path; treat as
             // schema-shaped failure for the basis dimension to surface upstream.
             codes.push(codes::BASIS_AMBIGUOUS_EVIDENCE_KIND.to_string());
-            return DimensionResult { status: BasisStatus::Ambiguous, reason_codes: codes };
+            return DimensionResult {
+                status: BasisStatus::Ambiguous,
+                reason_codes: codes,
+            };
         }
     };
 
     // (3) Absent: rule empty AND no evidence refs → absent → gap.
-    if intent.claimed_basis.rule.trim().is_empty()
-        && intent.claimed_basis.evidence_refs.is_empty()
+    if intent.claimed_basis.rule.trim().is_empty() && intent.claimed_basis.evidence_refs.is_empty()
     {
         codes.push(codes::BASIS_ABSENT.to_string());
-        return DimensionResult { status: BasisStatus::Absent, reason_codes: codes };
+        return DimensionResult {
+            status: BasisStatus::Absent,
+            reason_codes: codes,
+        };
     }
 
     // (4) Apply §7.3 sufficiency matrix using fresh, non-self-cert evidence.
@@ -174,8 +187,7 @@ pub fn derive_basis(intent: &Intent) -> DimensionResult<BasisStatus> {
         }
         Execute => {
             let has_basis = has(PolicyRef) || has(HumanConfirmation);
-            let has_trace =
-                has(ToolTrace) || has(TestLog) || has(CommandOutput) || has(FileHash);
+            let has_trace = has(ToolTrace) || has(TestLog) || has(CommandOutput) || has(FileHash);
             if has_basis && has_trace {
                 Sufficiency::Ok
             } else {
@@ -210,7 +222,10 @@ pub fn derive_basis(intent: &Intent) -> DimensionResult<BasisStatus> {
     match result {
         Sufficiency::Ok => {
             codes.push(codes::BASIS_OK.to_string());
-            DimensionResult { status: BasisStatus::Satisfied, reason_codes: codes }
+            DimensionResult {
+                status: BasisStatus::Satisfied,
+                reason_codes: codes,
+            }
         }
         Sufficiency::Soft(code) => {
             // Distinguish stale-only from absent-of-right-kind from genuine absence.
@@ -223,11 +238,17 @@ pub fn derive_basis(intent: &Intent) -> DimensionResult<BasisStatus> {
                 BasisStatus::Insufficient
             };
             codes.push(code.to_string());
-            DimensionResult { status, reason_codes: codes }
+            DimensionResult {
+                status,
+                reason_codes: codes,
+            }
         }
         Sufficiency::Hard(code) => {
             codes.push(code.to_string());
-            DimensionResult { status: BasisStatus::Inadmissible, reason_codes: codes }
+            DimensionResult {
+                status: BasisStatus::Inadmissible,
+                reason_codes: codes,
+            }
         }
     }
 }
@@ -263,7 +284,10 @@ pub fn derive_precedence(intent: &Intent) -> DimensionResult<PrecedenceStatus> {
         codes.push(codes::PRECEDENCE_CALLER_ASSERTED_UNVERIFIED.to_string());
     }
 
-    DimensionResult { status, reason_codes: codes }
+    DimensionResult {
+        status,
+        reason_codes: codes,
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -279,7 +303,10 @@ pub fn derive_standing(intent: &Intent) -> DimensionResult<StandingStatus> {
         if intent.revocation.provenance == Provenance::CallerAsserted {
             codes.push(codes::REVOCATION_CALLER_ASSERTED_UNVERIFIED.to_string());
         }
-        return DimensionResult { status: StandingStatus::Forbidden, reason_codes: codes };
+        return DimensionResult {
+            status: StandingStatus::Forbidden,
+            reason_codes: codes,
+        };
     }
 
     // (2a) Scope omitted: emit SCOPE_NOT_ASSERTED. For non-observe ops, this
@@ -304,7 +331,10 @@ pub fn derive_standing(intent: &Intent) -> DimensionResult<StandingStatus> {
         if scope.provenance == Provenance::CallerAsserted {
             codes.push(codes::SCOPE_CALLER_ASSERTED_UNVERIFIED.to_string());
         }
-        return DimensionResult { status: StandingStatus::OutOfScope, reason_codes: codes };
+        return DimensionResult {
+            status: StandingStatus::OutOfScope,
+            reason_codes: codes,
+        };
     }
 
     derive_standing_inner(intent, Some(scope), codes)
@@ -315,7 +345,6 @@ fn derive_standing_inner(
     scope: Option<&ScopeAssertion>,
     mut codes: Vec<String>,
 ) -> DimensionResult<StandingStatus> {
-
     // (3) Standing class vs operation min_standing.
     let min = intent.operation_class.min_standing();
     if intent.actor_standing.class < min {
@@ -330,7 +359,10 @@ fn derive_standing_inner(
         ) {
             codes.push(codes::STANDING_LADDER_V1_FLAT.to_string());
         }
-        return DimensionResult { status: StandingStatus::Insufficient, reason_codes: codes };
+        return DimensionResult {
+            status: StandingStatus::Insufficient,
+            reason_codes: codes,
+        };
     }
 
     // (4) Satisfied path.
@@ -353,7 +385,10 @@ fn derive_standing_inner(
         codes.push(codes::STANDING_LADDER_V1_FLAT.to_string());
     }
 
-    DimensionResult { status: StandingStatus::Satisfied, reason_codes: codes }
+    DimensionResult {
+        status: StandingStatus::Satisfied,
+        reason_codes: codes,
+    }
 }
 
 // ---------------------------------------------------------------------------

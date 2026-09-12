@@ -12,7 +12,17 @@
 use crate::model::*;
 use chrono::{Duration, Utc};
 use sha2::{Digest, Sha256};
+use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
+
+fn sha256_hex(digest: impl AsRef<[u8]>) -> String {
+    let digest = digest.as_ref();
+    let mut hex = String::with_capacity(digest.len() * 2);
+    for byte in digest {
+        write!(&mut hex, "{byte:02x}").expect("writing to String is infallible");
+    }
+    hex
+}
 
 // ---------------------------------------------------------------------------
 // Fact packets — what the user supplies
@@ -213,11 +223,7 @@ fn gather_policy_refs(
     out
 }
 
-fn policy_ref_evidence(
-    path: &Path,
-    now: chrono::DateTime<Utc>,
-    actor: &str,
-) -> Option<Evidence> {
+fn policy_ref_evidence(path: &Path, now: chrono::DateTime<Utc>, actor: &str) -> Option<Evidence> {
     if !path.exists() {
         return None;
     }
@@ -232,16 +238,12 @@ fn policy_ref_evidence(
     })
 }
 
-fn file_hash_evidence(
-    path: &Path,
-    now: chrono::DateTime<Utc>,
-    actor: &str,
-) -> Option<Evidence> {
+fn file_hash_evidence(path: &Path, now: chrono::DateTime<Utc>, actor: &str) -> Option<Evidence> {
     let bytes = std::fs::read(path).ok()?;
     let mut hasher = Sha256::new();
     hasher.update(&bytes);
     let digest = hasher.finalize();
-    let hex: String = digest.iter().map(|b| format!("{:02x}", b)).collect();
+    let hex = sha256_hex(digest);
     Some(Evidence {
         reference: format!("file://{}#sha256:{}", display_path(path), hex),
         kind: EvidenceKind::FileHash,
@@ -253,11 +255,7 @@ fn file_hash_evidence(
     })
 }
 
-fn human_conf_evidence(
-    token: &str,
-    now: chrono::DateTime<Utc>,
-    actor: &str,
-) -> Evidence {
+fn human_conf_evidence(token: &str, now: chrono::DateTime<Utc>, actor: &str) -> Evidence {
     Evidence {
         reference: format!("human://{token}"),
         kind: EvidenceKind::HumanConfirmation,
@@ -269,11 +267,7 @@ fn human_conf_evidence(
     }
 }
 
-fn git_status_evidence(
-    cwd: &Path,
-    now: chrono::DateTime<Utc>,
-    actor: &str,
-) -> Option<Evidence> {
+fn git_status_evidence(cwd: &Path, now: chrono::DateTime<Utc>, actor: &str) -> Option<Evidence> {
     let out = std::process::Command::new("git")
         .arg("-C")
         .arg(cwd)
@@ -287,7 +281,7 @@ fn git_status_evidence(
     let mut hasher = Sha256::new();
     hasher.update(&body);
     let digest = hasher.finalize();
-    let hex: String = digest.iter().map(|b| format!("{:02x}", b)).collect();
+    let hex = sha256_hex(digest);
     Some(Evidence {
         reference: format!("git://{}#status:sha256:{}", display_path(cwd), hex),
         kind: EvidenceKind::CommandOutput,
@@ -301,11 +295,7 @@ fn git_status_evidence(
 
 /// Caller-cooked scope: target inside cwd AND cwd has at least one
 /// policy doc → assert true. Otherwise omit (so kernel emits SCOPE_NOT_ASSERTED).
-fn derive_scope(
-    target: &Path,
-    cwd: &Path,
-    policy_paths: &[PathBuf],
-) -> Option<ScopeAssertion> {
+fn derive_scope(target: &Path, cwd: &Path, policy_paths: &[PathBuf]) -> Option<ScopeAssertion> {
     let target_abs = match target.canonicalize() {
         Ok(p) => p,
         // Target doesn't exist yet (e.g., new file); use lexical containment.
@@ -339,10 +329,7 @@ fn scope_for_cwd(cwd: &Path, policy_paths: &[PathBuf]) -> Option<ScopeAssertion>
         evidence_refs: policy_paths
             .iter()
             .map(|p| format!("policy://{}", display_path(p)))
-            .chain(std::iter::once(format!(
-                "cwd://{}",
-                display_path(cwd)
-            )))
+            .chain(std::iter::once(format!("cwd://{}", display_path(cwd))))
             .collect(),
     })
 }
