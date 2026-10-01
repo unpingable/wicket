@@ -316,3 +316,7 @@ See [SPEC.md §3](./SPEC.md). Eight load-bearing lines. Don't add a ninth.
 ## License
 
 Apache-2.0. See [LICENSE](./LICENSE) and [NOTICE](./NOTICE).
+
+## Beta work planning
+
+See the [current beta work plan](docs/BETA-WORK.md) for owned requirements, exclusions, dependencies and GitHub issues. Plan publication does not start implementation or transfer qualification.
