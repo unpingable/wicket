@@ -1,23 +1,22 @@
 # Wicket
 
-Public repository: [`unpingable/wicket`](https://github.com/unpingable/wicket).
-The crate and command remain `wicket`; **Constellation Wicket** is a family
-display label, not a repository rename. The former `wicket-guard` repository
-is a historical husk; its maintained diff-cooking example and regression live
-here. See [HOWTO.md](HOWTO.md) for the bounded lane.
+Public repository name: **Constellation Wicket** (`unpingable/wicket`). The
+crate and command remain `wicket`. The former `wicket-guard` repository is a
+historical husk; its maintained diff-cooking example and regression live here.
+See [HOWTO.md](HOWTO.md) for the bounded lane.
 
 > **Status (2026-07-26): the admissibility-preflight kernel — live,
 > separately instantiated; its "admissibility membrane" office doctrine
 > remains candidate/non-binding.** Wicket is consumed in code today by
 > Night Shift's MVP-A cook/Wicket/WLP tail (`wicket::check` via Cargo path
 > dependency) and is not a decision office of the supported four-office
-> vertical (Nightshift → Constellation AG → Docket → Constellation NQ). Its documented relations:
+> vertical (Nightshift → AG ng → Docket → NQ). Its documented relations:
 > classic Agent Governor ("operational mint"; Wicket fixtures are the
 > contract surface) and transition-kernel (a Wicket verdict is advisory
-> input; that office re-decides). **No record defines the Wicket ↔ Constellation AG
-> relation** — Constellation AG hosts its own admission-shaped checks for its one
+> input; that office re-decides). **No record defines the Wicket ↔ AG ng
+> relation** — AG ng hosts its own admission-shaped checks for its one
 > effect class and has not absorbed Wicket; whether a future generic
-> admission membrane sits upstream of Constellation AG is an open operator ruling.
+> admission membrane sits upstream of AG ng is an open operator ruling.
 > Nothing here is deprecated.
 
 Admissibility preflight for agentic operations. A small Rust CLI/library that
